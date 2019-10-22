@@ -13,6 +13,9 @@ class Animal(object):
     def eat(self):
         print("Animal is eating......")
 
+    def __len__(self):
+        return 100
+
 
 class Dog(Animal):
 

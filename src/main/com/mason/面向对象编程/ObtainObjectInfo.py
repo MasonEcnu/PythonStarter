@@ -19,14 +19,26 @@ def test():
     pass
 
 
-print(type(test) == types.FunctionType)
-print(isinstance(test, types.FunctionType))
-
 # 使用isinstance()
 # isinstance()判断的是一个对象是否是该类型本身，或者位于该类型的父继承链上
 # 总是优先使用isinstance()判断类型，可以将指定类型及其子类“一网打尽”
 
 dog = Dog()
 cat = Cat()
-print(isinstance(dog, Animal))
-print(isinstance([1, 2, 3], (list, tuple)))
+
+if __name__ == '__main__':
+    print(type(test) == types.FunctionType)
+    print(isinstance(test, types.FunctionType))
+    print(isinstance(dog, Animal))
+    print(isinstance([1, 2, 3], (list, tuple)))
+
+# 使用dir()
+# 获取对象的所有属性和方法
+
+if __name__ == '__main__':
+    print(dir(dog))
+    print(len(dog))
+    print(len(cat))
+
+    print(getattr(dog, "hash", "hash属性/方法不存在"))
+    print(hasattr(dog, "eat"))
