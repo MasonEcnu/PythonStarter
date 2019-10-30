@@ -5,7 +5,7 @@
 
 L = ['Michael', 'Sarah', 'Tracy', 'Bob', 'Jack']
 
-# 去前三个元素
+# 取前三个元素
 # [)：半开半闭区间
 print(L[0:3])
 print(L[:3])
