@@ -17,6 +17,7 @@ def test_sqllite3():
     conn = sqlite3.connect(db_file_path)
     # 创建一个游标
     cursor = conn.cursor()
+    print(type(cursor))
     # 执行建表语句
     cursor.execute("create table if not exists user (id varchar(20) primary key, name varchar(10))")
     # 继续执行插入语句
@@ -35,6 +36,7 @@ def test_sqllite3():
     conn.close()
 
 
+#
 # if __name__ == '__main__':
 #     test_sqllite3()
 

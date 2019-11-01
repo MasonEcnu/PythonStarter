@@ -7,7 +7,7 @@
 # type==对应的Class类型
 import types
 
-from src.main.com.mason.面向对象编程.InheritAndPolymorphism import Dog, Cat, Animal
+from src.main.com.mason.面向对象编程.inherit_and_polymorphism import Dog, Cat, Animal
 
 print(type(123))
 print(type("123"))
