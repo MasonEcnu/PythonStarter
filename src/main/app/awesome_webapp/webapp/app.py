@@ -65,6 +65,14 @@ def init_jinja2(app, **kw):
 
 
 async def logger_factory(app, handler):
+    async def logger(request):
+        logging.info("Request:%s %s" % (request.method, request.path))
+        return await handler(request)
+
+    return logger
+
+
+async def data_factory(app, handler):
     async def parse_data(request):
         if request.method == "POST":
             if request.content_type.startswith("application/json"):
@@ -102,7 +110,7 @@ async def response_factory(app, handler):
                 resp.content_type = "application/json;charset=utf-8"
                 return resp
             else:
-                body_str = app["__template__"].get_template(template).render(**r)
+                body_str = app["__templating__"].get_template(template).render(**r)
                 resp = web.Response(body=body_str.encode("utf-8"))
                 resp.content_type = "text/html;charset=utf-8"
                 return resp
@@ -134,24 +142,31 @@ def datetime_filter(t):
     return u"%s年%s月%s日" % (dt.year, dt.month, dt.day)
 
 
-async def init(loop):
+async def start_webapp(loop):
     kw = {
         "user": "root",
         "password": "123456",
         "db": "awesome_app"
     }
     await orm.create_pool(loop, **kw)
-    app = web.Application(loop, middlewares=[
-        logger_factory, response_factory
-    ])
+    app = web.Application(middlewares=[logger_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
-    add_routes(app, "handlers")
+    add_routes(app, 'handlers')
     add_static(app)
-    srv = await loop.create_server(app.make_handler(), '127.0.0.1', 10101)
+    _runner = web.AppRunner(app)
+    await _runner.setup()
+    _site = web.TCPSite(
+        _runner, "127.0.0.1", 10101
+    )
+    await _site.start()
     logging.info('server started at http://127.0.0.1:10101...')
-    return srv
+    return _runner, _site
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(init(loop))
-loop.run_forever()
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    runner, site = loop.run_until_complete(start_webapp(loop))
+    try:
+        loop.run_forever()
+    except KeyboardInterrupt as err:
+        loop.run_until_complete(runner.cleanup())

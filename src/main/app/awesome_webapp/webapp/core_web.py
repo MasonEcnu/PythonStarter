@@ -165,8 +165,7 @@ class RequestHandler(object):
         try:
             r = await self._func(**kw)
             return r
-        # todo APIError
-        except ValueError as e:
+        except APIError as e:
             return dict(error=e.error, data=e.data, message=e.message)
 
 

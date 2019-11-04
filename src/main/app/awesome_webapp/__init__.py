@@ -21,3 +21,8 @@
 # +- ios/                  <-- 存放iOS App工程
 # |
 # +- LICENSE               <-- 代码LICENSE
+
+__all__ = [
+    "webapp", "conf", "dist", "backup", "ios",
+    "LICENSE"
+]
